@@ -1,40 +1,45 @@
 import java.util.Scanner;
 
 public class Main {
-    static char[][] gameField = new char[10][10];
-    static char emptyArea = '~';
-    static char placeOfShip = 'O';
+    static final char EMPTY_AREA = '~';
+    static char[][] emptyGameField = makeGameField();
+    static char[][] gameField = makeGameField();
+
+    static final char PLACE_OF_SHIP = 'O';
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        makeGameField();
-        printGameField();
+        printGameField(emptyGameField);
         createAircraftCarrier();
-        printGameField();
+        printGameField(gameField);
         createBattleShip();
-        printGameField();
+        printGameField(gameField);
         createSubmarine();
-        printGameField();
+        printGameField(gameField);
         createCruiser();
-        printGameField();
+        printGameField(gameField);
         createDestroyer();
-        printGameField();
+        printGameField(gameField);
         System.out.println("The game starts!");
-        printGameField();
+        System.out.println();
+        printGameField(emptyGameField);
         System.out.println("Take a shot!");
+        System.out.println();
         takeShot();
     }
 
-    public static void makeGameField() {
+    public static char[][] makeGameField() {
+        char[][] field = new char[10][10];
 
-        for (int i = 0; i < gameField.length; i++) {
-            for (int j = 0; j < gameField[i].length; j++) {
-                gameField[i][j] = emptyArea;
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[i].length; j++) {
+                field[i][j] = EMPTY_AREA;
             }
         }
+        return field;
     }
 
-    public static void printGameField() {
+    public static void printGameField(char[][] gameField) {
         System.out.print(" ");
         for (int i = 1; i <= 10; i++) {
             System.out.print(" " + i);
@@ -50,6 +55,7 @@ public class Main {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public static int mapCharToInt(char character) {
@@ -86,7 +92,7 @@ public class Main {
 
         for (int i = rowStartIndex; i <= rowEndIndex; i++) {
             for (int j = columnStartIndex; j <= columnEndIndex; j++) {
-                if (gameField[i][j] != emptyArea) {
+                if (gameField[i][j] != EMPTY_AREA) {
                     empty = false;
                     break;
                 }
@@ -116,53 +122,67 @@ public class Main {
 
             if (!checkSpace(rowStartIndex, columnStartIndex, rowEndIndex, columnEndIndex)) {
                 System.out.println("Error! You placed it too close to another one. Try again:");
+                System.out.println();
                 createShip(lengthOfShip, nameOfShip);
             } else if (rowStartIndex != rowEndIndex && columnStartIndex != columnEndIndex) {
                 System.out.println("Error! Wrong ship location! Try again:");
+                System.out.println();
                 createShip(lengthOfShip, nameOfShip);
             } else if (inputLength1 != lengthOfShip && inputLength2 != lengthOfShip) {
                 System.out.println("Error! Wrong length of the " + nameOfShip + "! Try again:");
+                System.out.println();
                 createShip(lengthOfShip, nameOfShip);
             } else {
                 if (rowStartIndex == rowEndIndex) {
                     for (int i = columnStartIndex; i <= columnEndIndex; i++) {
-                        gameField[rowStartIndex][i] = placeOfShip;
+                        gameField[rowStartIndex][i] = PLACE_OF_SHIP;
                     }
                 } else {
                     for (int i = rowStartIndex; i <= rowEndIndex; i++) {
-                        gameField[i][columnStartIndex] = placeOfShip;
+                        gameField[i][columnStartIndex] = PLACE_OF_SHIP;
                     }
                 }
             }
         } catch (Exception e) {
             System.out.println("Error. The coordinates are incorrect. Try again:");
+            System.out.println();
             createShip(lengthOfShip, nameOfShip);
         }
     }
 
     public static void createAircraftCarrier() {
         System.out.println("Enter the coordinates of the Aircraft Carrier (5 cells):");
+        System.out.println();
         createShip(5, "Aircraft Carrier");
+        System.out.println();
     }
 
     public static void createBattleShip() {
         System.out.println("Enter the coordinates of the Battleship (4 cells):");
+        System.out.println();
         createShip(4, "Battleship");
+        System.out.println();
     }
 
     public static void createSubmarine() {
         System.out.println("Enter the coordinates of the Submarine (3 cells):");
+        System.out.println();
         createShip(3, "Submarine");
+        System.out.println();
     }
 
     public static void createCruiser() {
         System.out.println("Enter the coordinates of the Cruiser (3 cells):");
+        System.out.println();
         createShip(3, "Cruiser");
+        System.out.println();
     }
 
     public static void createDestroyer() {
         System.out.println("Enter the coordinates of the Destroyer (2 cells):");
+        System.out.println();
         createShip(2, "Destroyer");
+        System.out.println();
     }
 
     private static void takeShot () {
@@ -173,18 +193,25 @@ public class Main {
 
             int columnShotIndex = Integer.parseInt(inputShot[1]) - 1;
 
-            if (gameField[rowShotIndex][columnShotIndex] == placeOfShip) {
+            if (gameField[rowShotIndex][columnShotIndex] == PLACE_OF_SHIP) {
                 gameField[rowShotIndex][columnShotIndex] = 'X';
+                emptyGameField[rowShotIndex][columnShotIndex] = 'X';
+                printGameField(emptyGameField);
                 System.out.println("You hit a ship!");
-                printGameField();
+                System.out.println();
             } else {
                 gameField[rowShotIndex][columnShotIndex] = 'M';
+                emptyGameField[rowShotIndex][columnShotIndex] = 'M';
+                printGameField(emptyGameField);
                 System.out.println("You missed!");
-                printGameField();
+                System.out.println();
             }
+            printGameField(gameField);
         } catch (Exception e) {
             System.out.println("Error! You entered the wrong coordinates! Try again:");
+            System.out.println();
             takeShot();
+            System.out.println();
         }
     }
 }
